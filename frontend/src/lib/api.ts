@@ -233,3 +233,41 @@ export async function upvoteComment(id: string) {
   const data = (await res.json()) as unknown as ErrorResponse;
   throw Error(data.error);
 }
+
+export async function postComment(
+  id: number,
+  content: string,
+  isNested?: boolean,
+) {
+  try {
+    const res = isNested
+      ? await client.comments[":id"].$post({
+          form: {
+            content,
+          },
+          param: {
+            id: id.toString(),
+          },
+        })
+      : await client.posts[":id"].comment.$post({
+          form: {
+            content,
+          },
+          param: {
+            id: id.toString(),
+          },
+        });
+
+    if (res.ok) {
+      return await res.json();
+    }
+    const data = (await res.json()) as unknown as ErrorResponse;
+    return data;
+  } catch (e) {
+    return {
+      success: false,
+      error: String(e),
+      isFormError: false,
+    } as ErrorResponse;
+  }
+}

@@ -1,13 +1,15 @@
 import { CommentCard } from "@/components/comment-card";
+import { CommentForm } from "@/components/comment-form";
 import { PostCard } from "@/components/post-card";
 import { SortBar } from "@/components/sort-bar";
 import { Card, CardContent } from "@/components/ui/card";
-import { getComments, getPost } from "@/lib/api";
+import { getComments, getPost, userQueryOptions } from "@/lib/api";
 import { useUpvoteComment, useUpvotePost } from "@/lib/api-hooks";
 import { orderSchema, sortBySchema } from "@/shared/types";
 import {
   infiniteQueryOptions,
   queryOptions,
+  useQuery,
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from "@tanstack/react-query";
@@ -64,6 +66,7 @@ function Post() {
   const { id, sortBy, order } = Route.useSearch();
   const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
   const { data } = useSuspenseQuery(postQueryOptions(id));
+  const { data: user } = useQuery(userQueryOptions());
   const {
     data: comments,
     hasNextPage,
@@ -86,6 +89,13 @@ function Post() {
       )}
       <div className="mb-4 mt-8">
         <h2 className="mb-2 text-lg font-semibold text-foreground">Comments</h2>
+        {user && (
+          <Card className="mb-4">
+            <CardContent className="p-4">
+              <CommentForm id={id} />
+            </CardContent>
+          </Card>
+        )}
         {comments && comments.pages[0].data.length > 0 && (
           <SortBar sortBy={sortBy} order={order} />
         )}

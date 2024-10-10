@@ -17,6 +17,7 @@ import {
 import { useState } from "react";
 import { Separator } from "./ui/separator";
 import { useUpvoteComment } from "@/lib/api-hooks";
+import { CommentForm } from "./comment-form";
 
 type CommentCardProps = {
   comment: Comment;
@@ -69,6 +70,7 @@ export function CommentCard({
       return lastPageParam + 1;
     },
   });
+  const isDraft = comment.id === -1;
 
   const { data: user } = useQuery(userQueryOptions());
   const isUpvoted = comment.commentUpvotes.length > 0;
@@ -77,7 +79,12 @@ export function CommentCard({
     comments?.pages[0].data?.length === 0 && comment.commentCount > 0;
 
   return (
-    <div className={cn(depth > 0 && "ml-4 border-l border-border pl-4")}>
+    <div
+      className={cn(
+        depth > 0 && "ml-4 border-l border-border pl-4",
+        isDraft && "pointer-events-none opacity-50",
+      )}
+    >
       <div className="py-2">
         <div className="mb-2 flex items-center space-x-1 text-xs">
           <button
@@ -127,7 +134,15 @@ export function CommentCard({
                 </button>
               )}
             </div>
-            {isReplying && <div className="mt-2">COMMENT FORM</div>}
+            {isReplying && (
+              <div className="mt-2">
+                <CommentForm
+                  id={comment.id}
+                  isParent
+                  onSuccess={() => setActiveReplyId(null)}
+                />
+              </div>
+            )}
           </>
         )}
       </div>
