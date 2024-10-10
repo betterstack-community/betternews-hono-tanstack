@@ -1,4 +1,18 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3000
+      - DATABASE_URL=postgresql://user:password@db:5432/betternewsdb
+    depends_on:
+      - db
+    networks:
+      - betternews-network
+    ports:
+      - "3000:3000"
+
   db:
     image: postgres:17
     environment:

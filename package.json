@@ -5,7 +5,8 @@
     "format:write": "prettier . --write",
     "format:check": "prettier . --check",
     "lint:server": "cd server && eslint .",
-    "lint:frontend": "cd frontend && eslint ."
+    "lint:frontend": "cd frontend && eslint .",
+    "start": "bun server/index.ts"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.4.1",
