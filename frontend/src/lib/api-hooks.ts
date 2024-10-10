@@ -1,4 +1,4 @@
-import { Post } from "@/shared/types";
+import { Post, SuccessResponse } from "@/shared/types";
 import {
   InfiniteData,
   useMutation,
@@ -21,6 +21,17 @@ export const useUpvotePost = () => {
     onMutate: async (variable) => {
       let prevData;
       await queryClient.cancelQueries({ queryKey: ["post", Number(variable)] });
+
+      queryClient.setQueryData<SuccessResponse<Post>>(
+        ["post", Number(variable)],
+        produce((draft) => {
+          if (!draft) {
+            return undefined;
+          }
+          updatePostUpvote(draft.data);
+        }),
+      );
+
       queryClient.setQueriesData<InfiniteData<GetPostsSuccess>>(
         {
           queryKey: ["posts"],
@@ -44,6 +55,17 @@ export const useUpvotePost = () => {
       return { prevData };
     },
     onSuccess: (upvoteData, variable) => {
+      queryClient.setQueryData<SuccessResponse<Post>>(
+        ["post", Number(variable)],
+        produce((draft) => {
+          if (!draft) {
+            return undefined;
+          }
+          draft.data.points = upvoteData.data.count;
+          draft.data.isUpvoted = upvoteData.data.isUpvoted;
+        }),
+      );
+
       queryClient.setQueriesData<InfiniteData<GetPostsSuccess>>(
         { queryKey: ["posts"] },
         produce((oldData) => {
@@ -60,6 +82,7 @@ export const useUpvotePost = () => {
           );
         }),
       );
+
       queryClient.invalidateQueries({
         queryKey: ["posts"],
         type: "inactive",
@@ -68,6 +91,7 @@ export const useUpvotePost = () => {
     },
     onError: (err, variable, context) => {
       console.error(err);
+      queryClient.invalidateQueries({ queryKey: ["post", Number(variable)] });
       toast.error("Failed to upvote post");
       if (context?.prevData) {
         queryClient.setQueriesData(

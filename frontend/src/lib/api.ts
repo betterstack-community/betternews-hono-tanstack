@@ -7,6 +7,7 @@ import type {
   SuccessResponse,
 } from "@/shared/types";
 import { queryOptions } from "@tanstack/react-query";
+import { notFound } from "@tanstack/react-router";
 const client = hc<ApiRoutes>("/", {
   fetch: (input: RequestInfo | URL, init?: RequestInit) =>
     fetch(input, {
@@ -145,5 +146,23 @@ export const postSubmit = async (
       error: String(e),
       isFormError: false,
     } as ErrorResponse;
+  }
+};
+
+export const getPost = async (id: number) => {
+  const res = await client.posts[":id"].$get({
+    param: {
+      id: id.toString(),
+    },
+  });
+  if (res.ok) {
+    const data = await res.json();
+    return data;
+  } else {
+    if (res.status === 404) {
+      throw notFound();
+    }
+    const data = (await res.json()) as unknown as ErrorResponse;
+    throw new Error(data.error);
   }
 };
