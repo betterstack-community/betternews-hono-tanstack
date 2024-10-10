@@ -119,3 +119,31 @@ export async function upvotePost(id: string) {
   const data = (await res.json()) as unknown as ErrorResponse;
   throw new Error(data.error);
 }
+
+export const postSubmit = async (
+  title: string,
+  url: string,
+  content: string,
+) => {
+  try {
+    const res = await client.posts.$post({
+      form: {
+        title,
+        url,
+        content,
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+    const data = (await res.json()) as unknown as ErrorResponse;
+    return data;
+  } catch (e) {
+    return {
+      success: false,
+      error: String(e),
+      isFormError: false,
+    } as ErrorResponse;
+  }
+};
