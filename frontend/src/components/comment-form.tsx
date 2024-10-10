@@ -1,11 +1,14 @@
-import { useCreateComment } from "@/lib/api-hooks";
-import { createCommentSchema } from "@/shared/types";
 import { useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
+
 import { toast } from "sonner";
-import { Textarea } from "./ui/textarea";
+
+import { createCommentSchema } from "@/shared/types";
+import { useCreateComment } from "@/lib/api-hooks";
+
 import { FieldInfo } from "./field-info";
 import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 export function CommentForm({
   id,

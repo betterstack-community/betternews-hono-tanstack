@@ -1,4 +1,7 @@
 import { hc, InferResponseType } from "hono/client";
+import { notFound } from "@tanstack/react-router";
+import { queryOptions } from "@tanstack/react-query";
+
 import type {
   ApiRoutes,
   ErrorResponse,
@@ -6,8 +9,7 @@ import type {
   SortBy,
   SuccessResponse,
 } from "@/shared/types";
-import { queryOptions } from "@tanstack/react-query";
-import { notFound } from "@tanstack/react-router";
+
 const client = hc<ApiRoutes>("/", {
   fetch: (input: RequestInfo | URL, init?: RequestInit) =>
     fetch(input, {

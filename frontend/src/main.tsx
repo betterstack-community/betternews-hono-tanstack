@@ -1,13 +1,16 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import ReactDOM from "react-dom/client";
+
+import { routeTree } from "./routeTree.gen";
+
 import "./globals.css";
+
 import { Loader2Icon } from "lucide-react";
-import { NotFound } from "./components/not-found";
+
 import { ErrorComponent } from "./components/error-component";
+import { NotFound } from "./components/not-found";
 
 const queryClient = new QueryClient();
 // Set up a Router instance

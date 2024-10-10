@@ -1,4 +1,17 @@
-import { FieldInfo } from "@/components/field-info";
+import {
+  createFileRoute,
+  useBlocker,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { zodValidator } from "@tanstack/zod-form-adapter";
+
+import { toast } from "sonner";
+
+import { createPostSchema } from "@/shared/types";
+import { postSubmit } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,18 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { postSubmit } from "@/lib/api";
-import { createPostSchema } from "@/shared/types";
-import { useForm } from "@tanstack/react-form";
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  createFileRoute,
-  useBlocker,
-  useNavigate,
-  useRouter,
-} from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-form-adapter";
-import { toast } from "sonner";
+import { FieldInfo } from "@/components/field-info";
 
 export const Route = createFileRoute("/_auth/submit")({
   component: () => <Submit />,

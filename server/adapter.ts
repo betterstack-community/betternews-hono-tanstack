@@ -1,11 +1,12 @@
-import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 import { drizzle } from "drizzle-orm/postgres-js";
 
+import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 import postgres from "postgres";
 import { z } from "zod";
+
 import { sessionTable, userRelations, userTable } from "./db/schemas/auth";
-import { postsRelations, postsTable } from "./db/schemas/posts";
 import { commentRelations, commentsTable } from "./db/schemas/comments";
+import { postsRelations, postsTable } from "./db/schemas/posts";
 import {
   commentUpvoteRelations,
   commentUpvotesTable,

@@ -1,15 +1,18 @@
+import { useNavigate } from "@tanstack/react-router";
+
+import { ArrowUpIcon } from "lucide-react";
+
 import { Order, SortBy } from "@/shared/types";
+import { cn } from "@/lib/utils";
+
+import { Button } from "./ui/button";
 import {
   Select,
+  SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectContent,
   SelectValue,
 } from "./ui/select";
-import { useNavigate } from "@tanstack/react-router";
-import { Button } from "./ui/button";
-import { ArrowUpIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export function SortBar({ sortBy, order }: { sortBy: SortBy; order: Order }) {
   const navigate = useNavigate();

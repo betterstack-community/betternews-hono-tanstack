@@ -1,11 +1,5 @@
-import { CommentCard } from "@/components/comment-card";
-import { CommentForm } from "@/components/comment-form";
-import { PostCard } from "@/components/post-card";
-import { SortBar } from "@/components/sort-bar";
-import { Card, CardContent } from "@/components/ui/card";
-import { getComments, getPost, userQueryOptions } from "@/lib/api";
-import { useUpvoteComment, useUpvotePost } from "@/lib/api-hooks";
-import { orderSchema, sortBySchema } from "@/shared/types";
+import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import {
   infiniteQueryOptions,
   queryOptions,
@@ -13,11 +7,19 @@ import {
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
 import { fallback, zodSearchValidator } from "@tanstack/router-zod-adapter";
+
 import { ChevronDownIcon } from "lucide-react";
-import { useState } from "react";
 import { z } from "zod";
+
+import { orderSchema, sortBySchema } from "@/shared/types";
+import { getComments, getPost, userQueryOptions } from "@/lib/api";
+import { useUpvoteComment, useUpvotePost } from "@/lib/api-hooks";
+import { Card, CardContent } from "@/components/ui/card";
+import { CommentCard } from "@/components/comment-card";
+import { CommentForm } from "@/components/comment-form";
+import { PostCard } from "@/components/post-card";
+import { SortBar } from "@/components/sort-bar";
 
 const postSearchSchema = z.object({
   id: fallback(z.number(), 0).default(0),
@@ -60,6 +62,15 @@ const commentsInfiniteQueryOptions = ({
 export const Route = createFileRoute("/post")({
   component: () => <Post />,
   validateSearch: zodSearchValidator(postSearchSchema),
+  loaderDeps: ({ search: { id, sortBy, order } }) => ({ id, sortBy, order }),
+  loader: async ({ context, deps: { id, sortBy, order } }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(postQueryOptions(id)),
+      context.queryClient.ensureInfiniteQueryData(
+        commentsInfiniteQueryOptions({ id, sortBy, order }),
+      ),
+    ]);
+  },
 });
 
 function Post() {
@@ -88,7 +99,11 @@ function Post() {
         />
       )}
       <div className="mb-4 mt-8">
-        <h2 className="mb-2 text-lg font-semibold text-foreground">Comments</h2>
+        {comments && comments.pages[0].data.length > 0 && (
+          <h2 className="mb-2 text-lg font-semibold text-foreground">
+            Comments
+          </h2>
+        )}
         {user && (
           <Card className="mb-4">
             <CardContent className="p-4">

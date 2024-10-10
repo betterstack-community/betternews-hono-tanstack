@@ -1,8 +1,9 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { postsTable } from "./posts";
+
 import { userTable } from "./auth";
 import { commentsTable } from "./comments";
+import { postsTable } from "./posts";
 
 export const postUpvotesTable = pgTable("post_upvotes", {
   id: serial("id").primaryKey(),

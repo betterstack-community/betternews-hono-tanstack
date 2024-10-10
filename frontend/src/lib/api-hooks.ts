@@ -1,17 +1,20 @@
 import {
+  InfiniteData,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+
+import { current, produce } from "immer";
+import { toast } from "sonner";
+
+import {
   Comment,
   PaginatedResponse,
   Post,
   SuccessResponse,
 } from "@/shared/types";
-import {
-  InfiniteData,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+
 import { GetPostsSuccess, postComment, upvoteComment, upvotePost } from "./api";
-import { current, produce } from "immer";
-import { toast } from "sonner";
 
 const updatePostUpvote = (draft: Post) => {
   draft.points += draft.isUpvoted ? -1 : +1;

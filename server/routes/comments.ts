@@ -1,22 +1,24 @@
+import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
+import { and, asc, countDistinct, desc, eq, sql } from "drizzle-orm";
+
 import { db } from "@/adapter";
 import { type Context } from "@/context";
 import { commentsTable } from "@/db/schemas/comments";
 import { postsTable } from "@/db/schemas/posts";
 import { commentUpvotesTable } from "@/db/schemas/upvotes";
-import { getISOFormatDateQuery } from "@/lib/utils";
 import { loggedIn } from "@/middleware/loggedIn";
+import { zValidator } from "@hono/zod-validator";
+import { z } from "zod";
+
 import {
-  type Comment,
   createCommentSchema,
-  type PaginatedResponse,
   paginationSchema,
+  type Comment,
+  type PaginatedResponse,
   type SuccessResponse,
 } from "@/shared/types";
-import { zValidator } from "@hono/zod-validator";
-import { eq, sql, and, desc, asc, countDistinct, isNull } from "drizzle-orm";
-import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
-import { z } from "zod";
+import { getISOFormatDateQuery } from "@/lib/utils";
 
 export const commentsRouter = new Hono<Context>()
   .post(

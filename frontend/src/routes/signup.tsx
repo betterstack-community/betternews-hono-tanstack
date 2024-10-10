@@ -5,12 +5,17 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { z } from "zod";
-import { fallback, zodSearchValidator } from "@tanstack/router-zod-adapter";
 import { useForm } from "@tanstack/react-form";
-
+import { useQueryClient } from "@tanstack/react-query";
+import { fallback, zodSearchValidator } from "@tanstack/router-zod-adapter";
 import { zodValidator } from "@tanstack/zod-form-adapter";
+
+import { toast } from "sonner";
+import { z } from "zod";
+
 import { loginSchema } from "@/shared/types";
+import { postSignup, userQueryOptions } from "@/lib/api";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -18,13 +23,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { FieldInfo } from "@/components/field-info";
-import { Button } from "@/components/ui/button";
-import { postSignup, userQueryOptions } from "@/lib/api";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 
 const signupSearchSchema = z.object({
   redirect: fallback(z.string(), "/").default("/"),

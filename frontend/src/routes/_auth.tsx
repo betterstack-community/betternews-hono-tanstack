@@ -1,5 +1,6 @@
-import { userQueryOptions } from "@/lib/api";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+
+import { userQueryOptions } from "@/lib/api";
 
 export const Route = createFileRoute("/_auth")({
   component: () => <Outlet />,

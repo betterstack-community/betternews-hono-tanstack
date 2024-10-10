@@ -1,23 +1,25 @@
-import { getCommentComments, userQueryOptions } from "@/lib/api";
-import { cn, relativeTime } from "@/lib/utils";
-import { Comment } from "@/shared/types";
+import { useState } from "react";
 import {
   useQuery,
   useQueryClient,
   useSuspenseInfiniteQuery,
 } from "@tanstack/react-query";
+
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   MessageSquareIcon,
   MinusIcon,
-  Plus,
   PlusIcon,
 } from "lucide-react";
-import { useState } from "react";
-import { Separator } from "./ui/separator";
+
+import { Comment } from "@/shared/types";
+import { getCommentComments, userQueryOptions } from "@/lib/api";
 import { useUpvoteComment } from "@/lib/api-hooks";
+import { cn, relativeTime } from "@/lib/utils";
+
 import { CommentForm } from "./comment-form";
+import { Separator } from "./ui/separator";
 
 type CommentCardProps = {
   comment: Comment;

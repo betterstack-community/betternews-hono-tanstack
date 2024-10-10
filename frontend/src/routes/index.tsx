@@ -1,16 +1,18 @@
-import { PostCard } from "@/components/post-card";
-import { SortBar } from "@/components/sort-bar";
-import { Button } from "@/components/ui/button";
-import { getPosts } from "@/lib/api";
-import { useUpvotePost } from "@/lib/api-hooks";
-import { orderSchema, sortBySchema } from "@/shared/types";
+import { createFileRoute } from "@tanstack/react-router";
 import {
   infiniteQueryOptions,
   useSuspenseInfiniteQuery,
 } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
 import { fallback, zodSearchValidator } from "@tanstack/router-zod-adapter";
+
 import { z } from "zod";
+
+import { orderSchema, sortBySchema } from "@/shared/types";
+import { getPosts } from "@/lib/api";
+import { useUpvotePost } from "@/lib/api-hooks";
+import { Button } from "@/components/ui/button";
+import { PostCard } from "@/components/post-card";
+import { SortBar } from "@/components/sort-bar";
 
 const homeSearchSchema = z.object({
   sortBy: fallback(sortBySchema, "points").default("recent"),
@@ -50,6 +52,17 @@ const postsInfiniteQueryOptions = ({
 export const Route = createFileRoute("/")({
   component: HomeComponent,
   validateSearch: zodSearchValidator(homeSearchSchema),
+  loaderDeps: ({ search }) => ({
+    sortBy: search.sortBy,
+    order: search.order,
+    author: search.author,
+    site: search.site,
+  }),
+  loader: ({ context, deps: { sortBy, order, author, site } }) => {
+    context.queryClient.ensureInfiniteQueryData(
+      postsInfiniteQueryOptions({ sortBy, order, author, site }),
+    );
+  },
 });
 
 function HomeComponent() {
