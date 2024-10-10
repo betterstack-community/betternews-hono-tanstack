@@ -28,7 +28,7 @@ export function Header() {
             <Link className="hover:underline">submit</Link>
           </nav>
         </div>
-        <div className="hidden items-center space-x-4">
+        <div className="hidden items-center space-x-4 md:flex">
           {user ? (
             <>
               <span>{user}</span>
