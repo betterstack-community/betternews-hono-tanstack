@@ -166,3 +166,70 @@ export const getPost = async (id: number) => {
     throw new Error(data.error);
   }
 };
+
+export async function getComments(
+  id: number,
+  page: number = 1,
+  limit: number = 10,
+  pagination: {
+    sortBy?: SortBy;
+    order?: Order;
+  },
+) {
+  const res = await client.posts[":id"].comments.$get({
+    param: {
+      id: id.toString(),
+    },
+    query: {
+      page: page.toString(),
+      limit: limit.toString(),
+      includeChildren: "true",
+      sortBy: pagination.sortBy,
+      order: pagination.order,
+    },
+  });
+
+  if (res.ok) {
+    const data = await res.json();
+    return data;
+  } else {
+    const data = (await res.json()) as unknown as ErrorResponse;
+    throw new Error(data.error);
+  }
+}
+
+export async function getCommentComments(
+  id: number,
+  page: number = 1,
+  limit: number = 2,
+) {
+  const res = await client.comments[":id"].comments.$get({
+    param: {
+      id: id.toString(),
+    },
+    query: {
+      page: page.toString(),
+      limit: limit.toString(),
+    },
+  });
+  if (res.ok) {
+    const data = await res.json();
+    return data;
+  } else {
+    const data = (await res.json()) as unknown as ErrorResponse;
+    throw new Error(data.error);
+  }
+}
+
+export async function upvoteComment(id: string) {
+  const res = await client.comments[":id"].upvote.$post({
+    param: {
+      id,
+    },
+  });
+  if (res.ok) {
+    return await res.json();
+  }
+  const data = (await res.json()) as unknown as ErrorResponse;
+  throw Error(data.error);
+}

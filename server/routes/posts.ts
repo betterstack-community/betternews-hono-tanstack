@@ -259,8 +259,11 @@ export const postRouter = new Hono<Context>()
 
       const sortByColumn =
         sortBy === "points" ? commentsTable.points : commentsTable.createdAt;
+
       const sortOrder =
         order === "desc" ? desc(sortByColumn) : asc(sortByColumn);
+
+      console.log(sortBy, order);
 
       const [count] = await db
         .select({ count: countDistinct(commentsTable.id) })
